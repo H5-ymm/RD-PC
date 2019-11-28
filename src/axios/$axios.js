@@ -14,8 +14,8 @@ $axios.interceptors.request.use(
 		// 此处应根据具体业务写token
 		const token = localStorage.getItem('token');
 		// const token = 'ca8165aa88d74bf48164177fb';
-		config.headers['HTTP_TOKEN'] = token || 'ca8165aa88d74bf48164177fb';
-		config.headers['HTTP-USERID'] = JSON.parse(localStorage.getItem('userInfo')).id
+		// config.headers['HTTP_TOKEN'] = token || 'ca8165aa88d74bf48164177fb';
+		// config.headers['HTTP-USERID'] = JSON.parse(localStorage.getItem('userInfo')).id
 		// config.header('Access-Control-Allow-Origin', '*')
 		config.headers = {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'}
 		// config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -42,6 +42,7 @@ $axios.interceptors.response.use(
 	 // 服务器状态码不是200的情况 
    error => {  
     if (error.response.status) {   
+    console.log(error.response.status)
      switch (error.response.status) {    
       // 401: 未登录    
       // 未登录则跳转登录页面，并携带当前页面的路径    
@@ -53,7 +54,7 @@ $axios.interceptors.response.use(
       // 清除本地token和清空vuex中token对象    
       // 跳转登录页面    
       case 403:      
-       message.error(error.response.data.message);  
+       message.error(error.response.status.remind);  
        // 清除token     
        localStorage.removeItem('token');         
        // 跳转登录页面，并将要浏览的页面fullPath传过去，登录成功后跳转需要访问的页面     
@@ -64,7 +65,7 @@ $axios.interceptors.response.use(
       break;    
       // 其他错误，直接抛出错误提示    
       default:     
-       message.error(error.response.data.message) 
+       message.error(error.response.status.remind) 
      }   
      return Promise.reject(error.response);  
     }  
@@ -76,8 +77,32 @@ $axios.interceptors.response.use(
  * @param {Object} params [请求时携带的参数] 
  */
 export function post(url, params) { 
+  console.log(QS.stringify(params))
 	return new Promise((resolve, reject) => {   
 		$axios.post(`${baseURL}${url}`, QS.stringify(params))  
+      .then(res => {   
+        resolve(res.data) 
+      })  
+      .catch(err => {   
+        reject(err.data)  
+      }) 
+	});
+}
+export function $post(url, params) { 
+  console.log(QS.stringify(params))
+	return new Promise((resolve, reject) => {   
+		$axios.post(`${baseURL}${url}${'?'+ QS.stringify(params)}`)  
+      .then(res => {   
+        resolve(res.data) 
+      })  
+      .catch(err => {   
+        reject(err.data)  
+      }) 
+	});
+}
+export function upload(params) { 
+	return new Promise((resolve, reject) => {   
+		$axios.post(`http://tiantianxsg.com:39888/index.php/uploadimg/moreupload`, params)  
       .then(res => {   
         resolve(res.data) 
       })  

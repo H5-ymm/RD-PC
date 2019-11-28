@@ -17,7 +17,7 @@ class EditForm extends Component {
 	};
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		const { data } = this.props || null;
+    const { data } = this.props || null;
 		const formItemLayout = {
 			labelCol: { span: 4 },
 			wrapperCol: { span: 20 }
@@ -31,48 +31,29 @@ class EditForm extends Component {
 				<Form.Item label="账号:" {...formItemLayout}>
 					{getFieldDecorator('name', {
 						initialValue: data ? data.name : '',
-						rules: [
-							{
-								required: true,
-								message: '请输入账号'
-							}
-						]
+						// rules: [
+						// 	{
+						// 		required: true,
+						// 		message: '请输入账号'
+						// 	}
+						// ]
 					})(<Input className="inputWidth"/>)}
 				</Form.Item>
 				<Form.Item label="密码:" {...formItemLayout}>
 					{getFieldDecorator('password', {
 						initialValue: data ? data.password : '',
-						rules: [
-							{
-								required: true,
-								message: '请输入密码'
-							}
-						]
-					})(<Input className="inputWidth"/>)}
+					})(<Input className="inputWidth" type="password"/>)}
 				</Form.Item>
 				<Form.Item label="真实姓名:" {...formItemLayout}>
 					{getFieldDecorator('username', {
 						initialValue: data ? data.username : '',
-						rules: [
-							{
-								required: true,
-								message: '请输入真实姓名'
-								// pattern: /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/
-							}
-						]
 					})(<Input className="inputWidth"/>)}
 				</Form.Item>
 				<Form.Item label="权限:" {...formItemLayout} >
-				   {getFieldDecorator('role_id', {
-						initialValue: data ? data.role_id : '',
-						rules: [
-							{
-								required: true,
-								message: '请选择'
-							}
-						]
-					})( <Select  onChange={handleChange} className="inputWidth">
-							<Option value="1">管理员</Option>
+				   {getFieldDecorator('id', {
+						initialValue: data ? data.id : '',
+					  })( <Select  onChange={handleChange} className="inputWidth">
+							<Option value="15">管理员</Option>
 							<Option value="2">客服</Option>
 						</Select>)}
 				</Form.Item>
@@ -83,7 +64,7 @@ class EditForm extends Component {
 				  </Radio.Group>
 				</Form.Item>
 				<Form.Item {...formTailLayout} className="bottonBox">
-				    <Button className="botton">
+				    <Button className="botton" onClick={this.props.handleCancel}>
 						取消 
 					</Button>
 					<Button type="primary" onClick={this.props.handleSubmit} className="botton">

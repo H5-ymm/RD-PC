@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+  <form id= "uploadForm" action= "http://tiantianxsg.com:39888/index.php/uploadimg/moreupload" method= "post" enctype ="multipart/form-data">       
+    <p >上传文件： <input type ="file" name="file" id="file_excel"/></p>        
+    <input type ="submit" value="上传"/>    
+</form>    
+
+</body>
+</html>
+<script>
+    var fileObj = document.getElementById("file_excel").files[0]; // js 获取文件对象
+    var formFile = new FormData();
+    formFile.append("image", fileObj); //加入文件对象
+    var data = formFile;
+    $.ajax({    
+      url : "http://tiantianxsg.com:39888/index.php/uploadimg/moreupload",    
+      type : "POST",    
+      data : data,    
+      success : function(data) {    
+            $( '#serverResponse').html(data);    
+            console.log(data)
+      },    
+      error : function(data) {    
+        $( '#serverResponse').html(data.status + " : " + data.statusText + " : " + data.responseText);    
+      }    
+  });
+
+</script>

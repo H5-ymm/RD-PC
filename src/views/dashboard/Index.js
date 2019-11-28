@@ -40,7 +40,7 @@ class Index extends Component {
 			{
 				title: '操作',
 				key: 'action',
-				render: (text, row, index) => (
+				render: (text, row) => (
 				  <span>
 					<a className="actionBtn" onClick={() => this.handleEdit(row)}>修改</a>
 					<a onClick={() => this.handleDel(row)}>删除</a>
@@ -55,7 +55,7 @@ class Index extends Component {
 			key: 'action',
 			render: (text, record) => (
 			  <span>
-				<a >Invite {record.name}</a>
+				<a>Invite {record.name}</a>
 				<a>Delete</a>
 			  </span>
 			),
@@ -78,13 +78,12 @@ class Index extends Component {
 		const pager = { ...this.state.pagination };
 		pager.current = page;
 		this.setState({ pagination: pager }, () => {
-			this.fetch({ page: this.state.pagination.current });
+			this.fetch({ page: this.state.pagination.current, limit:20});
 		});
 	};
-	fetch = (params = {}) => {
+	fetch = (params) => {
 		this.setState({ loading: true });
-		$axios.post('http://tiantianxsg.com:39888/admin.php/user/userList', { page: 1, limit:20 }).then(data => {
-			console.log(data.data.data.data)
+		$axios.post('http://tiantianxsg.com:39888/admin.php/user/userList', params).then(data => {
 			const pagination = { ...this.state.pagination };
 			pagination.total = data.data.count;
 			this.setState({
@@ -102,17 +101,26 @@ class Index extends Component {
 	}
 	// 删除
 	handleDel(row) {
+    let _this = this
 		confirm({
 			title: '温馨提示',
 			content: '确定要删除当前内容吗？',
 			okText: '确定',
 			cancelText: '取消',
 			onOk() {
-				message.info('你点击了确定，当前行key为：' + row.key, 1);
+        _this.deleteUser(row.id)
 			},
 			onCancel() {}
 		});
-	}
+  }
+  deleteUser = (uid) => {
+    $axios.post(`http://tiantianxsg.com:39888/admin.php/user/deleteUser?uid=${uid}`).then(data => {
+      console.log(data)
+      if (data.status === 200) {
+        this.fetch({limit: this.state.pagination.pageSize, page: this.state.pagination.current});
+      }
+    });
+  }
 	handleOk = () => {
 		this.setState({ visible: false });
 	};
@@ -121,7 +129,7 @@ class Index extends Component {
 	};
 	handleSearch = e => {
 		e.preventDefault();
-		this.setState({ currentRow: this.state.currentRow, visible: true });
+		this.setState({ currentRow: this.state.currentRow, visible: true , id: ''});
 	};
 	handleReset = () => {
 		this.props.form.resetFields();
@@ -141,14 +149,13 @@ class Index extends Component {
 		pagination.pageSize = pageSize;
 		pagination.current = current;
 		this.setState({ pagination }, () => {
-			this.fetch({ results: this.state.pagination.pageSize, page: this.state.pagination.current });
+			this.fetch({ limit: this.state.pagination.pageSize, page: this.state.pagination.current });
 		});
 	}
 	handleSubmit = e => {
 		e.preventDefault();
 		let _this = this;
 		let url = ''
-		console.log(this.state.id)
 		if (this.state.id) {
 			url = 'http://tiantianxsg.com:39888/admin.php/user/updateUser'
 		}
@@ -156,25 +163,23 @@ class Index extends Component {
 			url = 'http://tiantianxsg.com:39888/admin.php/user/addUser'
 		}
 		this.formRef.props.form.validateFields((err, values) => {
+      console.log(values)
 			if (!err) {
-				console.log('Received values of form: ', values);
 				this.setState({ visible: false });
-				$axios.post( `http://tiantianxsg.com:39888/admin.php/user/addUser?name=${values.name}&username=${values.username}&password==${values.password}&role_id=${values.role_id}`).then(data => {
-					if (data.status.code ==200) {
-						_this.fetch();
-					}
-					console.log(data.data)
-		    });
+				$axios.post(url+`?name=${values.name}&username=${values.username}&password==${values.password}&role_id=${values.id}`).then(data => {
+					if (data.data.status.code === 200) {
+						_this.fetch({limit: this.state.pagination.pageSize, page: this.state.pagination.current});
+          }
+          else {
+            message.error(data.status.remind)
+          }
+		    }).catch(error => {
+          message.error(error.data.status.remind)
+        });
 			}
 		});
 	};
 	render() {
-		const { selectedRowKeys } = this.state;
-		// const rowSelection = {
-		// 	selectedRowKeys,
-		// 	onChange: this.onSelectedRowKeysChange
-		// };
-		const { getFieldDecorator } = this.props.form;
 		const paginationProps = {
 			onChange: page => this.handleTableChange(page),
 			onShowSizeChange: (current, pageSize) => this.onShowSizeChange(current, pageSize), //  pageSize 变化的回调
@@ -199,7 +204,7 @@ class Index extends Component {
 						}
 				})}/>
 			    <Modal title="新增/修改管理员" visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleOk} footer={null}>
-					<EditForm data={this.state.currentRow} handleSubmit={this.handleSubmit} visible={this.state.visible} wrappedComponentRef={form => (this.formRef = form)}  />
+					<EditForm data={this.state.currentRow} handleSubmit={this.handleSubmit} handleCancel={this.handleOk} visible={this.state.visible} wrappedComponentRef={form => (this.formRef = form)}  />
 				</Modal>
 			</div>
 		);

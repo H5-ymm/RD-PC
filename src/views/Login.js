@@ -4,7 +4,7 @@ import { Form, Icon, Input, Button } from 'antd';
 import { connect } from 'react-redux';
 import { setUserInfo } from '@/redux/actions/userInfo';
 import '@/assets/css/login';
-
+import { goLogin } from '../api/login'
 const FormItem = Form.Item;
 class Login extends Component {
 	state = { clientHeight: document.documentElement.clientHeight || document.body.clientHeight };
@@ -16,11 +16,18 @@ class Login extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
+        let params = {
+          name: 'jack',
+          password: '123456'
+        }
+        goLogin(params).then(res => {
+          console.log(res)
+        })
 				localStorage.setItem('isLogin', '1');
 				// 模拟生成一些数据
 				this.props.setUserInfo(Object.assign({}, values, { role: { type: 1, name: '超级管理员' } }));
 				localStorage.setItem('userInfo', JSON.stringify(Object.assign({}, values, { role: { type: 1, name: '超级管理员' } })));
-				this.props.history.push('/dashboard');
+				this.props.history.push('/form/basic');
 			} else {
 				console.log(err);
 			}

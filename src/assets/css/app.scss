@@ -33,6 +33,10 @@ $borderColor: #d8d8d8;
 	font-size: 28px;
 	background: transparent;
 }
+.logoImg {
+  width: 90px;
+  height: 90px;
+}
 .top-header {
 	background: #fff;
 	border-bottom: 1px solid $borderColor;
@@ -114,7 +118,7 @@ textarea{
 	  margin-right: 50px;
 	}
 }
-.ant-form-item {
+.ant-form-item{
   position: relative;
 }
 .text {
