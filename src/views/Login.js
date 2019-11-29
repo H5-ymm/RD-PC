@@ -15,19 +15,25 @@ class Login extends Component {
 	login = e => {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
+			console.log(values)
 			if (!err) {
-        let params = {
-          name: 'jack',
-          password: '123456'
-        }
-        goLogin(params).then(res => {
-          console.log(res)
-        })
-				localStorage.setItem('isLogin', '1');
-				// 模拟生成一些数据
-				this.props.setUserInfo(Object.assign({}, values, { role: { type: 1, name: '超级管理员' } }));
-				localStorage.setItem('userInfo', JSON.stringify(Object.assign({}, values, { role: { type: 1, name: '超级管理员' } })));
-				this.props.history.push('/form/basic');
+				let params = {
+					name: values.userName,
+					password: values.password
+				}
+				goLogin(params).then(res => {
+				console.log(res)
+					localStorage.setItem('token', res.data.token)
+					localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
+					localStorage.setItem('userInfo', JSON.stringify(Object.assign({},res.data.userInfo, { role: { type: 1, name: '超级管理员' } })))
+					localStorage.setItem('isLogin', '1');
+				  this.props.history.push('/form/basic');
+				})
+				// localStorage.setItem('isLogin', '1');
+				// // 模拟生成一些数据
+				// this.props.setUserInfo(Object.assign({}, values, { role: { type: 1, name: '超级管理员' } }));
+				// localStorage.setItem('userInfo', JSON.stringify(Object.assign({}, values, { role: { type: 1, name: '超级管理员' } })));
+				// this.props.history.push('/form/basic');
 			} else {
 				console.log(err);
 			}

@@ -67,7 +67,7 @@ class SettingForm extends Component {
   }
 	render() {
 		const { getFieldDecorator } = this.props.form
-    const { data } = this.props || null
+        const { data } = this.props || null
 		const formItemLayout = {
 			labelCol: {
 				sm: { span: 3 }
@@ -101,7 +101,11 @@ class SettingForm extends Component {
         }}>上传</div>
 			</div>
 		  );
-    const { imageUrl, startTime, endTime } = this.state
+	const { startTime, endTime } = this.state
+	let imageUrl = this.state.imageUrl
+	if (data.weblogo) {
+		imageUrl = 'http://tiantianxsg.com:39888/' + data.weblogo
+	}
     console.log(imageUrl)
 		return (
 			<Form {...formItemLayout} refs="settingForm" onSubmit={this.handleSubmit} labelAlign="left" className="base-form">

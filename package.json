@@ -166,11 +166,5 @@
       ]
     ]
   },
-  "repository": "git@github.com:chenjun1127/react-antd-admin.git",
-  "proxy": {
-    "/index.php": {
-      "target": "http://tiantianxsg.com:39888",
-      "changeOrigin":true
-    }
-  }
+  "repository": "git@github.com:chenjun1127/react-antd-admin.git"
 }

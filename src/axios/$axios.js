@@ -13,7 +13,11 @@ $axios.interceptors.request.use(
 		// 通过reudx的store拿到拿到全局状态树的token ，添加到请求报文，后台会根据该报文返回status
 		// 此处应根据具体业务写token
 		const token = localStorage.getItem('token');
-		// const token = 'ca8165aa88d74bf48164177fb';
+    // const token = 'ca8165aa88d74bf48164177fb';
+    if (localStorage.getItem('token')) {
+      config.headers['HTTP_TOKEN'] = token || 'ca8165aa88d74bf48164177fb';
+      config.headers['HTTP-USERID'] = JSON.parse(localStorage.getItem('userInfo')).id
+    }
 		// config.headers['HTTP_TOKEN'] = token || 'ca8165aa88d74bf48164177fb';
 		// config.headers['HTTP-USERID'] = JSON.parse(localStorage.getItem('userInfo')).id
 		// config.header('Access-Control-Allow-Origin', '*')

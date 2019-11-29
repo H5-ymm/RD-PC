@@ -61,25 +61,25 @@ export const menus = [
 	// 		}
 	// 	]
 	// },
-	// {
-	// 	path: '/table',
-	// 	title: '表格',
-	// 	icon: 'table',
-	// 	children: [
-	// 		{
-	// 			path: '/table/basic',
-	// 			title: '基础表格'
-	// 		},
-	// 		{
-	// 			path: '/table/edit',
-	// 			title: '表格编辑'
-	// 		},
-	// 		{
-	// 			path: '/table/search',
-	// 			title: '表格搜索'
-	// 		}
-	// 	]
-	// },
+	{
+		path: '/table',
+		title: '账户管理',
+		icon: 'table',
+		children: [
+			{
+				path: '/table/search',
+				title: '企业账户'
+			},
+			// {
+			// 	path: '/table/edit',
+			// 	title: '表格编辑'
+			// },
+			// {
+			// 	path: '/table/search',
+			// 	title: '表格搜索'
+			// }
+		]
+	},
 	// {
 	// 	path: '/chart',
 	// 	title: '图表',
