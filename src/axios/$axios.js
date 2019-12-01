@@ -6,6 +6,7 @@ const $axios = axios.create({
 	timeout: 4000
 });
 const baseURL = 'http://tiantianxsg.com:39888/admin.php'
+const cityURL = 'http://tiantianxsg.com:39888/index.php'
 //请求拦截
 $axios.interceptors.request.use(
 	function(config) {
@@ -96,6 +97,18 @@ export function $post(url, params) {
   console.log(QS.stringify(params))
 	return new Promise((resolve, reject) => {   
 		$axios.post(`${baseURL}${url}${'?'+ QS.stringify(params)}`)  
+      .then(res => {   
+        resolve(res.data) 
+      })  
+      .catch(err => {   
+        reject(err.data)  
+      }) 
+	});
+}
+export function $cityPost(url, params) { 
+  console.log(QS.stringify(params))
+	return new Promise((resolve, reject) => {   
+		$axios.post(`${cityURL}${url}${'?'+ QS.stringify(params)}`)  
       .then(res => {   
         resolve(res.data) 
       })  

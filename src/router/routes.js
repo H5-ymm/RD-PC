@@ -27,7 +27,7 @@ export const routes = [
 	{ path: '/dashboard', component: Dashboard },
 	{ path: '/icon', component: Icon },
 	{ path: '/form/basic', component: BasicForm },
-	{ path: '/form/editor', component: Editor },
+  { path: '/form/editor', component: Editor },
 	{ path: '/form/markdown', component: MarkDown },
 	{ path: '/menu/level/submenu-1', component: MenuOne },
 	{ path: '/menu/level/submenu-2', component: MenuTwo },

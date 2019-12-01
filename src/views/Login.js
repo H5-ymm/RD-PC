@@ -15,18 +15,17 @@ class Login extends Component {
 	login = e => {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
-			console.log(values)
 			if (!err) {
 				let params = {
 					name: values.userName,
 					password: values.password
 				}
 				goLogin(params).then(res => {
-				console.log(res)
 					localStorage.setItem('token', res.data.token)
 					localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
 					localStorage.setItem('userInfo', JSON.stringify(Object.assign({},res.data.userInfo, { role: { type: 1, name: '超级管理员' } })))
-					localStorage.setItem('isLogin', '1');
+          localStorage.setItem('isLogin', '1');
+          console.log(this.props)
 				  this.props.history.push('/form/basic');
 				})
 				// localStorage.setItem('isLogin', '1');
@@ -85,7 +84,7 @@ class Login extends Component {
 							<Button type="primary" htmlType="submit" block onClick={this.login}>
 								登录
 							</Button>
-							<div style={{ color: '#999',paddingTop:'10px',textAlign:'center' }}>Tips : 输入任意用户名密码即可</div>
+							{/* <div style={{ color: '#999',paddingTop:'10px',textAlign:'center' }}>Tips : 输入任意用户名密码即可</div> */}
 						</FormItem>
 					</Form>
 				</div>

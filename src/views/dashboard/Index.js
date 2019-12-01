@@ -42,8 +42,8 @@ class Index extends Component {
 				key: 'action',
 				render: (text, row) => (
 				  <span>
-					<a className="actionBtn" onClick={() => this.handleEdit(row)}>修改</a>
-					<a onClick={() => this.handleDel(row)}>删除</a>
+            <a className="actionBtn" onClick={() => this.handleEdit(row)}>修改</a>
+            <a onClick={() => this.handleDel(row)}>删除</a>
 				  </span>
 				),
 			  },
@@ -96,7 +96,6 @@ class Index extends Component {
 	};
 	// 编辑
 	handleEdit(row) {
-		console.log(row)
 		this.setState({ currentRow: row, visible: true, id: row.id });
 	}
 	// 删除
@@ -115,7 +114,6 @@ class Index extends Component {
   }
   deleteUser = (uid) => {
     $axios.post(`http://tiantianxsg.com:39888/admin.php/user/deleteUser?uid=${uid}`).then(data => {
-      console.log(data)
       if (data.status === 200) {
         this.fetch({limit: this.state.pagination.pageSize, page: this.state.pagination.current});
       }
@@ -163,7 +161,6 @@ class Index extends Component {
 			url = 'http://tiantianxsg.com:39888/admin.php/user/addUser'
 		}
 		this.formRef.props.form.validateFields((err, values) => {
-      console.log(values)
 			if (!err) {
 				this.setState({ visible: false });
 				$axios.post(url+`?name=${values.name}&username=${values.username}&password==${values.password}&role_id=${values.id}`).then(data => {
@@ -202,8 +199,9 @@ class Index extends Component {
 						onClick: () => {
 							this.selectRow(record);
 						}
-				})}/>
-			    <Modal title="新增/修改管理员" visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleOk} footer={null}>
+				  })}
+        />
+			  <Modal title="新增/修改管理员" visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleOk} footer={null}>
 					<EditForm data={this.state.currentRow} handleSubmit={this.handleSubmit} handleCancel={this.handleOk} visible={this.state.visible} wrappedComponentRef={form => (this.formRef = form)}  />
 				</Modal>
 			</div>

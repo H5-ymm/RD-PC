@@ -6,7 +6,7 @@ import { setUserInfo } from '@/redux/actions/userInfo';
 import { emptyTag, addTag } from '@/redux/actions/tagList';
 import { setCollapse, setBreadCrumb, setTags, setTheme } from '@/redux/actions/setting';
 import { routes } from '@/router/routes';
-import FullScreen from '@/components/FullScreen';
+// import FullScreen from '@/components/FullScreen';
 import Tags from './Tags';
 import BasicDrawer from '@/components/BasicDrawer';
 

@@ -116,7 +116,7 @@ class SettingForm extends Component {
 
 						<span className="text"> <Icon type="info-circle" /> 如：便利聘人才网</span>
 					</Form.Item>
-          <Form.Item label="网站名称">  
+          <Form.Item label="网站LOGO">  
             <input
               type="file"
               ref={this.fileInputEl}	//挂载ref
@@ -124,12 +124,12 @@ class SettingForm extends Component {
               hidden	//隐藏input
               onChange={(event) => this.handlePhoto(event)}		
             />
-            <a onClick={() => {
-                this.fileInputEl.current.click()		//当点击a标签的时候触发事件
-              }}
+            <span onClick={() => {
+              this.fileInputEl.current.click()		//当点击a标签的时候触发事件
+             }}
               //自己看心情改样式吧
             >{imageUrl ? <img src={imageUrl} alt="avatar" className="logoImg" /> : uploadButton}
-            </a>
+            </span>
 					</Form.Item>
            
 					{/* <Form.Item label="网站LOGO" >

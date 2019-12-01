@@ -25,10 +25,6 @@ export const menus = [
 				path: '/form/basic',
 				title: '基本设置'
 			},
-			// {
-			// 	path: '/form/editor',
-			// 	title: '富文本'
-			// },
 			{
 				path: '/form/markdown',
 				title: '其他设置'
@@ -69,7 +65,11 @@ export const menus = [
 			{
 				path: '/table/search',
 				title: '企业账户'
-			},
+      },
+      // {
+			// 	path: '/form/editor',
+			// 	title: '企业账户'
+			// }
 			// {
 			// 	path: '/table/edit',
 			// 	title: '表格编辑'
