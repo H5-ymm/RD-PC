@@ -1,10 +1,14 @@
 import { $post, $cityPost } from '../axios/$axios'
 
+export const getCompanyList = data => $post('/company/companyList', data);
+
 export const getCompanyInfo = data => $post('/company/company_info', data);
 
 export const companyCheck = data => $post('/company/save_status', data);
 
 export const companyEdit = data => $post('/company/company_edit', data);
+
+export const companyLog = data => $post('/company/company_log', data);
 
 export const resetPassword = data => $post('/company/reset_password', data);
 

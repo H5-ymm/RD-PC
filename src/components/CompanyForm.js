@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Icon, Upload, Col, Row, message, Select,  confirm, Modal } from 'antd';
+import { Form, Input, Button, Icon, Col, Row, message, Select,  confirm, Modal } from 'antd';
 import { uploadFile } from '../api/setting';
 import moment from 'moment';
 import { getProvincesList, getCitysList, getAreasList, resetPassword } from '../api/company'
@@ -23,14 +23,15 @@ class CompanyForm extends Component {
     city:'',
     area: ''  ,
     visible: false,
-    uid:''
+    uid:'',
+    license_url: ''
 	}
 	componentWillReceiveProps(nextProps) {
 		!nextProps.visible && this.props.form.resetFields();
   };
   constructor(props) {
 		super(props)
-		this.fileInputEl = React.createRef();
+    this.fileInputEl = React.createRef();
   }
   getRegion() {
     getProvincesList().then(res=>{
@@ -66,13 +67,9 @@ class CompanyForm extends Component {
   }
 	handlePhoto = async (event) => {
     const files = [...event.target.files];
-    console.log(files)
     let formFile = new FormData()
     formFile.append('image', files[0]); //加入文件对象
     uploadFile(formFile).then(res => {
-      // this.setState({
-      //  logoUrl: res.data.url
-      // })
       this.props.getLogoImg(res.data.url)
     })
     if (files.length === 0) return;
@@ -92,6 +89,32 @@ class CompanyForm extends Component {
     );
     this.setState({
       imageUrl: result
+    })
+  }
+  handlePhotoCom = async (event) => {
+    const files = [...event.target.files];
+    let formFile = new FormData()
+    formFile.append('image', files[0]); //加入文件对象
+    uploadFile(formFile).then(res => {
+      this.props.getComImg(res.data.url)
+    })
+    if (files.length === 0) return;
+		await this.setState({ submitLoading: true })
+		let result = await Promise.all(
+			files.map(file => {
+				let url = null;
+				if (window.createObjectURL != undefined) {
+					url = window.createObjectURL(file)
+				} else if (window.URL != undefined) {
+					url = window.URL.createObjectURL(file)
+				} else if (window.webkitURL != undefined) {
+					url = window.webkitURL.createObjectURL(file)
+				}
+				return url;
+			})
+    );
+    this.setState({
+      license_url: result
     })
   }
   onChangeTime = time =>{
@@ -119,6 +142,28 @@ class CompanyForm extends Component {
   }
   handleCancel= () =>{
     this.setState({visible: false})
+  }
+  handleProvince = value => {
+    console.log(value)
+    this.props.getProvince(value)
+  }
+  handleCity = value => {
+    console.log(value)
+    this.props.getCity(value)
+  }
+  handleArea = value => {
+    console.log(value)
+    this.props.geArea(value)
+  }
+  getPhone = e => {
+    const { value } = e.target
+    console.log(value)
+    this.props.getTelphone(value)
+  }
+  getPhoneLaster = e => {
+    const { value } = e.target
+    console.log(value)
+    this.props.getTelphoneLaster(value)
   }
 	render() {
 		const { getFieldDecorator } = this.props.form
@@ -158,16 +203,12 @@ class CompanyForm extends Component {
 			</div>
 		  );
     let imageUrl = this.state.imageUrl
-    let licenseUrl = ''
-    if (data.logo_url) {
+    let licenseUrl = this.state.license_url
+    if (!this.state.imageUrl) {
       imageUrl = 'http://tiantianxsg.com:39888/' + data.logo_url
     }
-    if (data.license_url) {
+    if (!this.state.license_url) {
       licenseUrl = 'http://tiantianxsg.com:39888/' + data.license_url
-    }
-    let link_tel
-    if (data.link_tel) {
-       link_tel = data.link_tel.split('-')
     }
 		return (
 			<Form {...formItemLayout} refs="companyForm" onSubmit={this.handleSubmit} labelAlign="right" className="base-form">
@@ -185,7 +226,7 @@ class CompanyForm extends Component {
         </div>
         <div>
           <p className="company-title">基本信息</p>
-          <Form.Item label="网站名称">
+          <Form.Item label="企业名称">
 						{getFieldDecorator('com_name', {
               initialValue: data ? data.com_name : '',
               rules: [
@@ -194,37 +235,37 @@ class CompanyForm extends Component {
                   message: '请输入账号'
                 }
               ]
-						})(<Input placeholder="请输入网站名称"/>)}
+						})(<Input placeholder="请输入企业名称"/>)}
 					</Form.Item>
           <Form.Item label="企业LOGO">  
             <input
               type="file"
+              name="imageUrl"
               ref={this.fileInputEl}	//挂载ref
               accept=".jpg,.jpeg,.png"	//限制文件类型
               hidden	//隐藏input
               onChange={(event) => this.handlePhoto(event)}		
             />
-             <span onClick={() => {
+             <a onClick={() => {
                 this.fileInputEl.current.click()		//当点击a标签的时候触发事件
               }}
-              //自己看心情改样式吧
               >{imageUrl ? <img src={imageUrl} alt="avatar" className="logoImg" /> : uploadButton}
-            </span>
+            </a>
 					</Form.Item>
           <Form.Item label="企业执照上传">  
             <input
               type="file"
+              name="licenseUrl"
               ref={this.fileInputEl}	//挂载ref
               accept=".jpg,.jpeg,.png"	//限制文件类型
               hidden	//隐藏input
-              onChange={(event) => this.handlePhoto(event)}		
+              onChange={(event) => this.handlePhotoCom(event)}		
             />
-             <span onClick={() => {
+             <a onClick={() => {
                 this.fileInputEl.current.click()		//当点击a标签的时候触发事件
               }}
-              //自己看心情改样式吧
               >{licenseUrl ? <img src={licenseUrl} alt="avatar" className="logoImg" /> : uploadButton}
-            </span>
+            </a>
 					</Form.Item>
 					<Form.Item label="企业执照号:">
 					   {getFieldDecorator('business_licence', {
@@ -255,7 +296,7 @@ class CompanyForm extends Component {
 					    {/* {getFieldDecorator('email_status', {
 							initialValue: data ? data.email_status : '',
 						 })( */}
-              <Select style={{ width: 120, marginRight:'10px' }} placeholder="请选择">
+              <Select style={{ width: 120, marginRight:'10px' }} onChange={this.handleProvince.bind(this)} placeholder="请选择">
                 {
                   this.state.provinceList.map(item=>{
                     return (
@@ -264,7 +305,7 @@ class CompanyForm extends Component {
                   })
                 }
               </Select>
-              <Select style={{ width: 120, marginRight:'10px' }} placeholder="请选择">
+              <Select style={{ width: 120, marginRight:'10px' }} onChange={this.handleCity.bind(this)}  placeholder="请选择">
               {
                 this.state.cityList.map(item=>{
                   return (
@@ -273,7 +314,7 @@ class CompanyForm extends Component {
                 })
               }
             </Select>
-            <Select style={{ width: 120 }} placeholder="请选择">
+            <Select style={{ width: 120 }} placeholder="请选择" onChange={this.handleArea.bind(this)}>
             {
               this.state.areaList.map(item=>{
                 return (
@@ -296,13 +337,13 @@ class CompanyForm extends Component {
 						})( <Input placeholder="请输入联系电话"/>)}
 					</Form.Item>
 					<Form.Item label="公司座机:" >
-            <InputGroup>
+            <InputGroup >
               <Row gutter={10}>
                 <Col span={5}>
-                  <Input value={link_tel ? link_tel[0]: ''} />
+                  <Input  placeholder="区号" onChange={this.getPhone.bind(this)}/>
                 </Col>
                 <Col span={10}>
-                  <Input value={link_tel ? link_tel[1]:''} />
+                  <Input placeholder="座机号码"  onChange={this.getPhoneLaster.bind(this)}/>
                 </Col>
               </Row>
              </InputGroup>

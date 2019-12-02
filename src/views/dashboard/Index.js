@@ -96,7 +96,7 @@ class Index extends Component {
 	};
 	// 编辑
 	handleEdit(row) {
-		this.setState({ currentRow: row, visible: true, id: row.id });
+	   this.setState({ currentRow: row, visible: true, id: row.id });
 	}
 	// 删除
 	handleDel(row) {
@@ -188,7 +188,7 @@ class Index extends Component {
 		return (
 			<div className="shadow-radius">
 				<Alert message={this.state.text} type="info" className="message"/>
-				<Button type="primary" htmlType="submit" className="add" onClick={this.handleSearch}>添加管理员</Button>
+				<Button type="primary" htmlType="submit" className="add" onClick={this.handleSearch()}>添加管理员</Button>
 				<Table 
 					columns={this.state.columns} 
 					dataSource={this.state.data} 
@@ -200,8 +200,8 @@ class Index extends Component {
 							this.selectRow(record);
 						}
 				  })}
-        />
-			  <Modal title="新增/修改管理员" visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleOk} footer={null}>
+               />
+			   <Modal title="新增/修改管理员" visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleOk} footer={null}>
 					<EditForm data={this.state.currentRow} handleSubmit={this.handleSubmit} handleCancel={this.handleOk} visible={this.state.visible} wrappedComponentRef={form => (this.formRef = form)}  />
 				</Modal>
 			</div>

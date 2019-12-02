@@ -10,20 +10,26 @@ class TextEditor extends React.Component {
 		loading: false,
 		basicForm: {},
 		uid: '',
-    file: ''
+    file: '',
+    provinceid: '',
+    three_cityid: '',
+    cityid: '',
+    license_url: '',
+    telphone1: '',
+    telphone2: ''
 	};
 	handleSubmit = e => {
 		e.preventDefault();
 		this.formRef.props.form.validateFieldsAndScroll((err, values) => {
 			if (!err) {
-				values.provinceid = 1
-        values.three_cityid = 444
-        values.cityid  = 222
+				values.provinceid = this.state.provinceid
+        values.three_cityid = this.state.three_cityid
+        values.cityid  = this.state.cityid
         values.uid = this.state.uid
         let obj = {
-          license_url: "date/license_url.png",
-          link_tel: "021-238881324",
-          logo_url: "date/logo.png",
+          license_url: this.state.license_url,
+          link_tel:this.state.telphone1 + '-' + this.state.telphone2,
+          logo_url: this.state.file,
         }
         values = Object.assign(values, obj)
         // values.weblogo = this.state.file
@@ -40,6 +46,36 @@ class TextEditor extends React.Component {
       file: value
     })
   };
+  getComImg = value => {
+    this.setState({
+      license_url: value
+    })
+  };
+  getProvince = value => {
+    this.setState({
+      provinceid: value
+    })
+  }
+  getCity = value => {
+    this.setState({
+      cityid: value
+    })
+  }
+  geArea = value => {
+    this.setState({
+      three_cityid: value
+    })
+  }
+  getTelphone = value => {
+    this.setState({
+      telphone1: value
+    })
+  }
+  getTelphoneLaster = value => {
+    this.setState({
+      telphone2: value
+    })
+  }
 	componentWillMount() {
     let uid = ''
     if (this.props.location.query) {
@@ -67,7 +103,7 @@ class TextEditor extends React.Component {
 				<div className="public-title">
 					<h1>查看企业信息</h1>
 				</div>
-        <CompanyForm data={this.state.basicForm} handleSubmit={this.handleSubmit} handleCancel={this.handleOk} visible={true} wrappedComponentRef={form => (this.formRef = form)}  />
+        <CompanyForm data={this.state.basicForm} getTelphone={this.getTelphone} getTelphoneLaster={this.getTelphoneLaster}  getLogoImg={this.getLogoImg} getComImg={this.getComImg } handleSubmit={this.handleSubmit} getProvince={this.getProvince}  handleCancel={this.handleOk} getCity={this.getCity} visible={true} geArea={this.geArea}  wrappedComponentRef={form => (this.formRef = form)}  />
 			</div>
 		);
 	}
