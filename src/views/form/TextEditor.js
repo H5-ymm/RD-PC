@@ -32,7 +32,6 @@ class TextEditor extends React.Component {
           logo_url: this.state.file,
         }
         values = Object.assign(values, obj)
-        // values.weblogo = this.state.file
 				companyEdit(values).then(res => {
 					if(res.status.code === 200) {
 						message.success('保存成功');
